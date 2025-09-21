@@ -1,0 +1,190 @@
+/* Page layout */
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* height: 100vh; */
+  background: transparent;
+  font-family: Arial, sans-serif;
+  color: #fff;
+}
+
+/* Card */
+.auth-card {
+  background: #111;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 350px;
+  /* text-align: center; */
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  opacity: 0.90;
+}
+
+/* Glowing animated border */
+.auth-card::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(90deg,
+      #fa4315,
+      rgb(0, 26, 255),
+      #d0fa15,
+      #0ff);
+  background-size: 300% 300%;
+  border-radius: 14px;
+  z-index: -1;
+  animation: glowing-border 5s linear infinite;
+}
+
+/* Inner background so content stays clean */
+.auth-card::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  background: #111;
+  border-radius: 10px;
+  z-index: -1;
+}
+
+/* Keyframes for glowing movement */
+@keyframes glowing-border {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Logo placeholder */
+.auth-logo {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  background-color: #111111;
+}
+
+/* Title + subtitle */
+.auth-card h2 {
+  margin: 0.5rem 0;
+  color: #fff;
+  background-color: #111111;
+}
+
+.auth-card p {
+  margin: 0.5rem 0 1.5rem;
+  color: #aaa;
+  font-size: 0.95rem;
+  background-color: #111111;
+}
+
+/* Toggle buttons */
+.auth-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.auth-toggle button {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.auth-toggle button.active {
+  background: #fff;
+  color: #000;
+  font-weight: bold;
+}
+
+.auth-toggle button:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.auth-toggle button:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+/* Form */
+.form-group {
+  text-align: left;
+  margin-bottom: 1rem;
+  background-color: #111111;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+  color: #bbb;
+  background-color: #111111;
+}
+
+.form-group input {
+  width: 94%;
+  padding: 0.6rem;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #000;
+  color: #fff;
+}
+
+.form-group input:focus {
+  border-color: #15bdfa;
+  outline: none;
+  box-shadow: 0 0 8px #15bdfa;
+}
+
+/* Submit button */
+.submit-btn {
+  width: 92%;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 10px;
+  margin-top: 1rem;
+  background: #fff;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.submit-btn:hover {
+  background: #15bdfa;
+  color: #000;
+}
+
+/* Terms */
+.terms {
+  margin-top: 1rem;
+  font-size: 0.75rem;
+  color: #888;
+  background-color: #111111;
+}
+
+.terms a {
+  color: #15bdfa;
+  text-decoration: none;
+  background-color: #111111;
+}
+
+.terms a:hover {
+  text-decoration: underline;
+  background-color: #111111;
+}

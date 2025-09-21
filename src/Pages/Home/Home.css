@@ -1,0 +1,126 @@
+/* Reset & Base */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: black; /* prevents white flash/gap */
+    font-family: Arial, sans-serif;
+}
+
+/* Main Container */
+.home-container {
+    min-height: 100vh;       /* fallback for old browsers */
+    height: 100dvh;          /* dynamic viewport height (mobile safe) */
+    width: 100%;
+    background-image: url("world.png");
+    background-repeat: no-repeat;
+    background-size: cover;  /* ensures full coverage */
+    background-position: center center;
+    display: grid;
+    grid-template-columns: 45% 55%;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    padding: 0 5%;           /* safe spacing on smaller screens */
+    box-sizing: border-box;
+}
+
+/* Glowing Title */
+.glow-title {
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 2px;
+    font-size: clamp(24px, 6vw, 60px); /* scales with screen width */
+
+    text-shadow:
+        0 0 5px #fff,
+        0 0 10px #15bdfa,
+        0 0 20px #15bdfa,
+        0 0 40px rgba(21, 189, 250, 0.6);
+
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+/* Title Container */
+.title-container {
+    padding: 8%;
+    max-width: 600px;
+}
+
+/* Tablet & Small Laptop */
+@media only screen and (max-width: 1000px) {
+    .home-container {
+        grid-template-columns: 100%;
+        text-align: center;
+        padding: 5%;
+    }
+
+    .title-container {
+        padding: 5%;
+        margin: 0 auto;
+    }
+
+    .auth-container {
+        height: fit-content;
+        width: 100%;
+        margin-top: 20px;
+    }
+}
+
+/* Mobile */
+@media only screen and (max-width: 600px) {
+    .home-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center; /* vertically centers the card */
+        padding: 8% 5%;
+        height: auto; /* allow scroll if needed */
+    }
+
+    .glow-title {
+        font-size: clamp(20px, 8vw, 32px);
+        line-height: 1.3;
+    }
+
+    .title-container {
+        padding: 5% 0;
+    }
+
+    .auth-container {
+        width: 100%;
+        max-width: 400px;
+        padding: 10% 5%;
+        align-items: center;
+        margin-top: 20px;
+    }
+}
+
+/* Extra small devices */
+@media only screen and (max-width: 350px) {
+    .glow-title {
+        font-size: 18px;
+    }
+
+    .auth-container {
+        padding: 12% 4%;
+    }
+}
+
+/* Optional glow animation */
+@keyframes glowPulse {
+    0%, 100% {
+        text-shadow:
+            0 0 5px #fff,
+            0 0 10px #15bdfa,
+            0 0 20px #15bdfa,
+            0 0 40px rgba(21, 189, 250, 0.6);
+    }
+    50% {
+        text-shadow:
+            0 0 2px #fff,
+            0 0 8px #15bdfa,
+            0 0 16px #15bdfa,
+            0 0 30px rgba(21, 189, 250, 0.4);
+    }
+}
