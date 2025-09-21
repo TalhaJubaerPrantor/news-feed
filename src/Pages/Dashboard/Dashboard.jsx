@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Dashboard.css";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import Robot from "../../Components/Robot/Robot";
 import useNews from "../../Components/News/useNews";
-import { Scrollbars } from 'react-custom-scrollbars-2';
 
 // import bgImage from "bg.jpg"; // <-- Put your background image inside src folder
 
