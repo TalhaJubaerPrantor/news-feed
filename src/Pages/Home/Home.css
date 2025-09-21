@@ -12,7 +12,7 @@ html, body {
     min-height: 100vh;       /* fallback for old browsers */
     height: 100dvh;          /* dynamic viewport height (mobile safe) */
     width: 100%;
-    background-image: url("world.png");
+    background-image: url("/world.png");
     background-repeat: no-repeat;
     background-size: cover;  /* ensures full coverage */
     background-position: center center;
