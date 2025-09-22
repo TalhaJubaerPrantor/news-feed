@@ -63,7 +63,7 @@ body {
   transition: width 0.4s ease, background 0.3s ease, color 0.3s ease !important;
   display: inline-block;
   /* ✅ Important for width animation */
-  width: 90px;
+  width: 130px;
   /* ✅ Starting width */
   overflow: hidden;
   /* ✅ Prevent text overflow during transition */
@@ -73,7 +73,7 @@ body {
 .header nav button:hover {
   background: var(--page-bg);
   color: #fff;
-  width: 100px;
+  width: 150px;
 
   /* transition: 2s; */
   /* transition: width 0.5s ease-in-out;  */
@@ -366,6 +366,34 @@ body {
   flex-wrap: wrap;
 }
 
+.news-info-bottom {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  margin-top: 30px;
+}
+
+.bookmark-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.bookmark-icon {
+  font-size: 30px;
+  background: transparent;
+  color: #ffffff;
+}
+
+.bookmark-icon:hover{
+  font-size: 30px;
+  border-radius: 5px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background: red;
+  color: #ffffff;
+}
+
 .news-author {
   color: #fff;
   font-weight: 500;
@@ -405,8 +433,8 @@ body {
 
 /* Pagination Dots */
 .pagination-dots {
-      text-align: center;
-    padding-top: 10px;
+  text-align: center;
+  padding-top: 10px;
 }
 
 .dot {

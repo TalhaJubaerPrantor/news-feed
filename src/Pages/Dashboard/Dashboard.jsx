@@ -1,8 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import "./Dashboard.css";
 // import { Link } from "react-router-dom";
 import Robot from "../../Components/Robot/Robot";
 import useNews from "../../Components/News/useNews";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookmark } from "@fortawesome/free-regular-svg-icons";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { data } from "react-router-dom";
 
 // import bgImage from "bg.jpg"; // <-- Put your background image inside src folder
 
@@ -10,12 +14,23 @@ export default function Dashboard() {
   const [preferences, setPreferences] = useState(["AI", "Politics"]);
   const [newPref, setNewPref] = useState("");
   const [expandedNews, setExpandedNews] = useState(null);
-  const [scrollIntensity, setScrollIntensity] = useState(3000);
-  console.log("Scroll Intensity:", scrollIntensity);
+  const [scrollIntensity, setScrollIntensity] = useState();
+  const [selectedColor, setSelectedColor] = useState();
+  const [selectedFont, setSelectedFont] = useState();
+
+  const loggedEmail = localStorage.getItem("user")
+
+  // console.log("Scroll Intensity:", scrollIntensity);
+
+  const handleLogOut = () => {
+    localStorage.removeItem("user");
+    window.location.href = "/";
+  }
+
   // Fetched news hook
   const { stories, loading } = useNews();
   const ITEMS_PER_PAGE = 8;       // 🔹 Number of cards per page
-  console.log("Fetched Stories:", stories);
+  // console.log("Fetched Stories:", stories);
 
   const [page, setPage] = useState(0);
   const totalPages = Math.ceil(stories.length / ITEMS_PER_PAGE);
@@ -44,8 +59,7 @@ export default function Dashboard() {
 
 
   // Choose Theme
-  const [selected, setSelected] = useState("cyan");
-  document.documentElement.style.setProperty("--page-bg", selected);
+  document.documentElement.style.setProperty("--page-bg", selectedColor);
   const themes = [
     { id: "red", label: "Red" },
     { id: "green", label: "Green" },
@@ -53,8 +67,43 @@ export default function Dashboard() {
   ];
 
   // font select
-  const [selectedFont, setSelectedFont] = useState("sans-serif");
   document.documentElement.style.setProperty("--font-family", selectedFont);
+
+  // updateTheme
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/getuser/${loggedEmail}`)
+      .then(res => res.json())
+      .then(data => {
+        // console.log(data.user.scrollIntensity)
+        if (data.status == 200) {
+          // console.log(data)
+          setScrollIntensity(data.user.scrollIntensity)
+          setSelectedColor(data.user.theme)
+          setSelectedFont(data.user.font)
+        }
+      })
+  },[data])
+
+
+
+  const updateTheme = () => {
+    fetch('http://localhost:3000/update', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ loggedEmail, scrollIntensity, selectedColor, selectedFont })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status == 200) {
+          setScrollIntensity(data.updatedUser.scrollIntensity)
+          setSelectedColor(data.updatedUser.theme)
+          setSelectedFont(data.updatedUser.font)
+        }
+      })
+  }
 
 
   // Preferance handlers
@@ -69,9 +118,12 @@ export default function Dashboard() {
     setPreferences(preferences.filter((_, i) => i !== index));
   };
 
-  const toggleDropdown = (index) => {
-    setExpandedNews(expandedNews === index ? null : index);
-  };
+
+  // Bookmark handler
+  const [bookmarks, setBookmarks] = useState([]);
+  useEffect(() => {
+    // console.log("Bookmarks:", bookmarks);
+  }, [bookmarks]);
 
   return (
     <div
@@ -91,8 +143,8 @@ export default function Dashboard() {
         <h1>High Signal News Feed</h1>
         <nav>
           {/* <Link to='/settings'>Settings</Link> */}
-          <button className="bookmark">Bookmark</button>
-          <button className="logout">Log Out</button>
+          <button className="bookmark"> Bookmarks <FontAwesomeIcon icon={faBookmark} /> </button>
+          <button onClick={handleLogOut} className="logout">Log Out <FontAwesomeIcon icon={faRightFromBracket} /> </button>
         </nav>
       </header>
 
@@ -123,7 +175,7 @@ export default function Dashboard() {
           <div className="settings-box">
             <label>Scroll Intensity</label>
             <input onChange={(e) => {
-              setScrollIntensity(e.target.value * 1000)
+              setScrollIntensity(e.target.value * 100000)
             }} type="range" min="1" max="10" defaultValue="3" />
             <br /><br />
             <p>Choose Theme:</p>
@@ -132,8 +184,8 @@ export default function Dashboard() {
                 {themes.map((theme) => (
                   <button
                     key={theme.id}
-                    className={`option ${selected === theme.id ? "active" : ""}`}
-                    onClick={() => setSelected(theme.id)}
+                    className={`option ${selectedColor === theme.id ? "active" : ""}`}
+                    onClick={() => setSelectedColor(theme.id)}
                   >
                     {theme.label}
                   </button>
@@ -157,7 +209,7 @@ export default function Dashboard() {
                   <span className="font-name" style={{ fontFamily: 'Monospace' }}>Monospace</span>
                 </label>
               </div>
-              <button className="update-btn">Update</button>
+              <button onClick={updateTheme} className="update-btn">Update</button>
             </div>
 
           </div>
@@ -206,11 +258,10 @@ export default function Dashboard() {
                       <span className="news-author">By {story.by}</span>
                       <span>{new Date(story.time * 1000).toLocaleString()}</span>
                     </div>
-                    <h5>
-                      <br />
-                      <span>Points: {story.score}</span><br />
-                      <span>Source: HackerRank</span><br />
-                      <span>bookmark</span>
+                    <h5 className="news-info-bottom">
+                      <span>Points: {story.score}</span>
+                      <span>Source: HackerRank</span>
+                      <span><button onClick={(e) => { setBookmarks(story.id) }} className="bookmark-btn"><FontAwesomeIcon className="bookmark-icon" icon={faBookmark} /></button></span>
                     </h5>
                   </div>
                 ))
@@ -238,7 +289,7 @@ export default function Dashboard() {
           <div className="logo-box">
             <p style={{ fontSize: "large", paddingLeft: "10px", paddingRight: "10px" }}>Use mouse,keypad or touch to play with me</p>
             <Robot />
-            <p style={{ fontSize: "large", paddingLeft: "10px", paddingRight: "10px" }}>Hi, Iam <span style={{ color: selected, fontWeight: "Bold" }}>HUD</span>. Play with me when you are free</p>
+            <p style={{ fontSize: "large", paddingLeft: "10px", paddingRight: "10px" }}>Hi, Iam <span style={{ color: selectedColor, fontWeight: "Bold" }}>HUD</span>. Play with me when you are free</p>
           </div>
           <div className="news-detail">
             <h4>Arrow Up/W: <span style={{ color: "yellowgreen" }}> Take HUD Forword</span></h4>

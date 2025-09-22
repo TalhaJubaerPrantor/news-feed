@@ -3,13 +3,36 @@ import "./Auth.css";
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function Auth() {
-const navigate = useNavigate();
-
-  const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoginForm, setIsLoginForm] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // navigate('../pages/Dashboard/Dashboard.jsx', { replace: true });
+
+    console.log({ name, email, password, isLoginForm });
+
+    fetch(`http://localhost:3000/${isLoginForm ? 'login' : 'register'}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: isLoginForm ? JSON.stringify({ email, password }) : JSON.stringify({ name, email, password })
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          if (data.status == 200) {
+            localStorage.setItem("user", data.user.email);
+            // console.log(data.user.email);
+            navigate("/dashboard"); // Redirect after login
+          } else {
+            alert(data.message);
+          }
+        }
+      })
   };
 
   return (
@@ -23,40 +46,40 @@ const navigate = useNavigate();
         <div className="auth-toggle">
           <button
             type="button"
-            className={isLogin ? "active" : ""}
-            onClick={() => setIsLogin(true)}
+            className={isLoginForm ? "active" : ""}
+            onClick={() => setIsLoginForm(true)}
           >
             Sign In
           </button>
           <button
             type="button"
-            className={!isLogin ? "active" : ""}
-            onClick={() => setIsLogin(false)}
+            className={!isLoginForm ? "active" : ""}
+            onClick={() => setIsLoginForm(false)}
           >
             Sign Up
           </button>
         </div>
 
         {/* Form */}
-        <form style={{ backgroundColor:"#111111" }} onSubmit={handleSubmit}>
-          {!isLogin && (
+        <form style={{ backgroundColor: "#111111" }} onSubmit={handleSubmit}>
+          {!isLoginForm && (
             <div className="form-group">
               <label htmlFor="name">Name</label>
-              <input type="text" id="name" name="name" placeholder="Your full name" required />
+              <input type="text" id="name" name="name" onChange={(e) => { setName(e.target.value) }} placeholder="Your full name" required />
             </div>
           )}
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="hi@example.com" required />
+            <input type="email" id="email" name="email" onChange={(e) => { setEmail(e.target.value) }} placeholder="hi@example.com" required />
           </div>
           <div className="form-group">
             <label htmlFor="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Create a strong password" required />
+            <input type="password" id="password" name="password" onChange={(e) => { setPassword(e.target.value) }} placeholder="Create a strong password" required />
           </div>
           {/* <br /> */}
-          <Link type="submit" to="/dashboard" className="submit-btn">
-            {isLogin ? "Sign In" : "Create Account"}
-          </Link>
+          <button type="submit" className="submit-btn">
+            {isLoginForm ? "Sign In" : "Create Account"}
+          </button>
           {/* <br /> <br /> */}
         </form>
 
