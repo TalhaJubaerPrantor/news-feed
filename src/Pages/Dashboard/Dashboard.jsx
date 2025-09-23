@@ -11,8 +11,9 @@ import { data, Link } from "react-router-dom";
 // import bgImage from "bg.jpg"; // <-- Put your background image inside src folder
 
 export default function Dashboard() {
-  const [preferences, setPreferences] = useState(["AI", "Politics"]);
+  const [preferences, setPreferences] = useState([]);
   const [newPref, setNewPref] = useState("");
+  const [deletePref, setDeletePref] = useState("");
   const [expandedNews, setExpandedNews] = useState(null);
   const [scrollIntensity, setScrollIntensity] = useState();
   const [selectedColor, setSelectedColor] = useState();
@@ -83,10 +84,10 @@ export default function Dashboard() {
           setSelectedFont(data.user.font)
         }
       })
-  },[data])
+  }, [])
 
 
-  const [loadingUpdate,setLoadingUpdate]=useState(false)
+  const [loadingUpdate, setLoadingUpdate] = useState(false)
   const updateTheme = () => {
     setLoadingUpdate(true);
     fetch('http://localhost:3000/update', {
@@ -109,34 +110,57 @@ export default function Dashboard() {
 
 
   // Preferance handlers
-  const addPreference = () => {
-    if (newPref.trim()) {
-      setPreferences([...preferences, newPref]);
-      setNewPref("");
-    }
+  useEffect(() => {
+    fetch(`http://localhost:3000/prefernce/${loggedEmail}`)
+    .then(res=>res.json())
+    .then(data=>setPreferences(data))
+  }, [deletePref])
+
+  const addPreference = (prop) => {
+    fetch("http://localhost:3000/addprefernce", {
+      method: "PUT",
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ newPref, loggedEmail })
+    })
+      .then(res => res.json())
+      .then(data => setPreferences(data.preferences))
+
   };
 
-  const deletePreference = (index) => {
-    setPreferences(preferences.filter((_, i) => i !== index));
-  };
+  const deletePreference =async(deletePref)=>{
+    // console.log(e)
+    // console.log(deletePref)
+     await fetch(`http://localhost:3000/deletepreference`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({deletePref,loggedEmail})
+    })
+    .then(res=>res.json())
+    .then(data=>{
+      if(data.status=200){
+        setDeletePref(data.preferences)
+      }
+    })
+    
+  }
 
 
   // Bookmark handler
   const [bookmarks, setBookmarks] = useState();
-  function handleBookmark(newsId){
-    
+  function handleBookmark(newsId) {
+
     fetch(`http://localhost:3000/reqbookmark`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newsId)
     })
-    .then(res=>res.json())
-    .then(data=>{
-      if(data.id){
-        
-        setBookmarks(data.id)
-      }
-    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.id) {
+
+          setBookmarks(data.id)
+        }
+      })
 
 
   }
@@ -182,7 +206,11 @@ export default function Dashboard() {
               {preferences.map((pref, index) => (
                 <li key={index}>
                   {pref}
-                  <button onClick={() => deletePreference(index)}>✖</button>
+                  
+                  <button onClick={async()=>{
+                    // await setDeletePref(pref);
+                    await deletePreference(pref);
+                  }}>✖</button>
                 </li>
               ))}
             </ul>
@@ -225,7 +253,7 @@ export default function Dashboard() {
                   <span className="font-name" style={{ fontFamily: 'Monospace' }}>Monospace</span>
                 </label>
               </div>
-              <button onClick={updateTheme} className="update-btn">{loadingUpdate? "Updating":"Update"}</button>
+              <button onClick={updateTheme} className="update-btn">{loadingUpdate ? "Updating" : "Update"}</button>
             </div>
 
           </div>
@@ -277,7 +305,7 @@ export default function Dashboard() {
                     <h5 className="news-info-bottom">
                       <span>Points: {story.score}</span>
                       <span>Source: HackerRank</span>
-                      <span><button onClick={()=>handleBookmark({newsId:story.id,email:loggedEmail})} className="bookmark-btn"><FontAwesomeIcon style={{ backgroundColor: bookmarks==story.id? "green":"" }} className="bookmark-icon" icon={faBookmark} /></button></span>
+                      <span><button onClick={() => handleBookmark({ newsId: story.id, email: loggedEmail })} className="bookmark-btn"><FontAwesomeIcon style={{ backgroundColor: bookmarks == story.id ? "green" : "" }} className="bookmark-icon" icon={faBookmark} /></button></span>
                     </h5>
                   </div>
                 ))
