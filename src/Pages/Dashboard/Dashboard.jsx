@@ -6,7 +6,7 @@ import useNews from "../../Components/News/useNews";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { data } from "react-router-dom";
+import { data, Link } from "react-router-dom";
 
 // import bgImage from "bg.jpg"; // <-- Put your background image inside src folder
 
@@ -86,8 +86,9 @@ export default function Dashboard() {
   },[data])
 
 
-
+  const [loadingUpdate,setLoadingUpdate]=useState(false)
   const updateTheme = () => {
+    setLoadingUpdate(true);
     fetch('http://localhost:3000/update', {
       method: 'PUT',
       headers: {
@@ -101,6 +102,7 @@ export default function Dashboard() {
           setScrollIntensity(data.updatedUser.scrollIntensity)
           setSelectedColor(data.updatedUser.theme)
           setSelectedFont(data.updatedUser.font)
+          setLoadingUpdate(false)
         }
       })
   }
@@ -120,10 +122,24 @@ export default function Dashboard() {
 
 
   // Bookmark handler
-  const [bookmarks, setBookmarks] = useState([]);
-  useEffect(() => {
-    // console.log("Bookmarks:", bookmarks);
-  }, [bookmarks]);
+  const [bookmarks, setBookmarks] = useState();
+  function handleBookmark(newsId){
+    
+    fetch(`http://localhost:3000/reqbookmark`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newsId)
+    })
+    .then(res=>res.json())
+    .then(data=>{
+      if(data.id){
+        
+        setBookmarks(data.id)
+      }
+    })
+
+
+  }
 
   return (
     <div
@@ -143,8 +159,8 @@ export default function Dashboard() {
         <h1>High Signal News Feed</h1>
         <nav>
           {/* <Link to='/settings'>Settings</Link> */}
-          <button className="bookmark"> Bookmarks <FontAwesomeIcon icon={faBookmark} /> </button>
-          <button onClick={handleLogOut} className="logout">Log Out <FontAwesomeIcon icon={faRightFromBracket} /> </button>
+          <Link to="/bookmarks" className="bookmark"> Bookmarks <FontAwesomeIcon icon={faBookmark} /> </Link>
+          <Link onClick={handleLogOut} className="logout">Log Out <FontAwesomeIcon icon={faRightFromBracket} /> </Link>
         </nav>
       </header>
 
@@ -175,7 +191,7 @@ export default function Dashboard() {
           <div className="settings-box">
             <label>Scroll Intensity</label>
             <input onChange={(e) => {
-              setScrollIntensity(e.target.value * 100000)
+              setScrollIntensity(e.target.value * 1000)
             }} type="range" min="1" max="10" defaultValue="3" />
             <br /><br />
             <p>Choose Theme:</p>
@@ -209,7 +225,7 @@ export default function Dashboard() {
                   <span className="font-name" style={{ fontFamily: 'Monospace' }}>Monospace</span>
                 </label>
               </div>
-              <button onClick={updateTheme} className="update-btn">Update</button>
+              <button onClick={updateTheme} className="update-btn">{loadingUpdate? "Updating":"Update"}</button>
             </div>
 
           </div>
@@ -261,7 +277,7 @@ export default function Dashboard() {
                     <h5 className="news-info-bottom">
                       <span>Points: {story.score}</span>
                       <span>Source: HackerRank</span>
-                      <span><button onClick={(e) => { setBookmarks(story.id) }} className="bookmark-btn"><FontAwesomeIcon className="bookmark-icon" icon={faBookmark} /></button></span>
+                      <span><button onClick={()=>handleBookmark({newsId:story.id,email:loggedEmail})} className="bookmark-btn"><FontAwesomeIcon style={{ backgroundColor: bookmarks==story.id? "green":"" }} className="bookmark-icon" icon={faBookmark} /></button></span>
                     </h5>
                   </div>
                 ))

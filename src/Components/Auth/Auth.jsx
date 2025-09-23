@@ -8,12 +8,13 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
+  const [authLoading,setAuthLoading]=useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log({ name, email, password, isLoginForm });
-
+    // console.log({ name, email, password, isLoginForm });
+    setAuthLoading(true)
     fetch(`http://localhost:3000/${isLoginForm ? 'login' : 'register'}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -28,6 +29,7 @@ export default function Auth() {
             localStorage.setItem("user", data.user.email);
             // console.log(data.user.email);
             navigate("/dashboard"); // Redirect after login
+            setAuthLoading(false)
           } else {
             alert(data.message);
           }
@@ -78,7 +80,10 @@ export default function Auth() {
           </div>
           {/* <br /> */}
           <button type="submit" className="submit-btn">
-            {isLoginForm ? "Sign In" : "Create Account"}
+            {isLoginForm ? 
+            authLoading?"Loading":"Sign In"
+            : 
+            authLoading?"Loading":"Create Account"}
           </button>
           {/* <br /> <br /> */}
         </form>

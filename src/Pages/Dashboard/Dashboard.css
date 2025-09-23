@@ -87,21 +87,20 @@ body {
   margin-left: 12px !important;
   border-radius: 6px !important;
   cursor: pointer !important;
-  box-shadow: 0 0 6px rgb(255, 8, 0) !important;
+  box-shadow: 0 0 6px rgb(255, 0, 0) !important;
   transition: width 0.4s ease, background 0.3s ease, color 0.3s ease !important;
   display: inline-block;
-  /* ✅ Important for width animation */
-  width: 90px;
-  /* ✅ Starting width */
+  width: 120px;
   overflow: hidden;
-  /* ✅ Prevent text overflow during transition */
   text-align: center;
+  text-decoration: none;
 }
 
 .logout:hover {
   background: rgb(255, 0, 0) !important;
   color: #fff !important;
-  width: 100px;
+  width: 130px;
+  /* ✅ Smoothly expands to 100px */
 }
 
 .bookmark {
@@ -115,18 +114,16 @@ body {
   box-shadow: 0 0 6px rgb(255, 251, 0) !important;
   transition: width 0.4s ease, background 0.3s ease, color 0.3s ease !important;
   display: inline-block;
-  /* ✅ Important for width animation */
-  width: 90px;
-  /* ✅ Starting width */
+  width: 120px;
   overflow: hidden;
-  /* ✅ Prevent text overflow during transition */
   text-align: center;
+  text-decoration: none;
 }
 
 .bookmark:hover {
   background: rgb(255, 208, 0) !important;
   color: #fff !important;
-  width: 100px;
+  width: 130px;
   /* ✅ Smoothly expands to 100px */
 }
 
@@ -134,6 +131,25 @@ body {
 .content {
   display: grid;
   grid-template-columns: 20% 55% 25%;
+}
+
+@media (max-width: 1200px) {
+  .content {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+  .news-feed-wrapper {
+  height: auto !important;
+  /* width: 100%; */
+  /* background: #1e1e1e; */
+  /* display: flex
+; */
+  flex-direction: column;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 16px;
+  padding: 3%;
+}
 }
 
 /* Sidebar */
@@ -385,13 +401,13 @@ body {
   color: #ffffff;
 }
 
-.bookmark-icon:hover{
+.bookmark-icon:hover {
   font-size: 30px;
   border-radius: 5px;
   padding-top: 2px;
   padding-bottom: 2px;
-  background: red;
-  color: #ffffff;
+  background: yellow;
+  color: #000000;
 }
 
 .news-author {

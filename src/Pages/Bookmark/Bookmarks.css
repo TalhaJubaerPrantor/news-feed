@@ -1,0 +1,116 @@
+.bookmark-page {
+  /* background: #2A7B9B; */
+  background: linear-gradient(90deg, rgba(42, 123, 155, 1) 0%, rgba(0, 255, 255, 1) 50%, rgba(42, 123, 155, 1) 100%);
+  color: #f0f0f0;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+
+.title {
+  text-align: center;
+  background: black;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  padding: 10px 0px;
+  border-radius: 15px;
+  color: rgb(255, 255, 255);
+  text-shadow: 0 0 5px #ffd700, 0 0 10px #ffea00, 0 0 15px #ffe600, 0 0 20px #ffcc00;
+  border-bottom: 1px solid rgba(255, 221, 0, 0.5);
+  transition: text-shadow 0.3s ease, color 0.3s ease;
+}
+
+.title:hover {
+  color: yellow;
+  /* slightly brighter on hover */
+  text-shadow:
+    0 0 10px #ffe600,
+    0 0 20px #ffcc00,
+    0 0 30px #ffb700,
+    0 0 40px #ffa600;
+}
+
+.go-home {
+  font-weight: bold;
+  color: #000000;
+  text-decoration: none;
+}
+
+.go-home:hover {
+  font-size: 20px;
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.empty-text {
+  text-align: center;
+  color: #aaa;
+  margin-top: 40px;
+}
+
+.bookmark-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.bookmark-card {
+  background: #000000bf;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease;
+}
+
+.bookmark-card:hover {
+  transform: translateY(-4px);
+}
+
+.bookmark-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #fff;
+}
+
+.bookmark-meta {
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-bottom: 12px;
+}
+
+.bookmark-link {
+  color: #4ea1f3;
+  text-decoration: none;
+  margin-bottom: 12px;
+  word-break: break-word;
+  font-size: 0.9rem;
+}
+
+.bookmark-link:hover {
+  text-decoration: underline;
+}
+
+.remove-btn {
+  background: #e63946;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  align-self: flex-start;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+
+.remove-btn:hover {
+  background: #d62828;
+}
