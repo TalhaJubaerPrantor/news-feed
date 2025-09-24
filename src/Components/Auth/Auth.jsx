@@ -14,6 +14,7 @@ export default function Auth() {
   const [password, setPassword] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
   const [authLoading, setAuthLoading] = useState(false)
+  
 
   const auth = getAuth(app)
   const googleProvider = new GoogleAuthProvider()
@@ -69,6 +70,7 @@ export default function Auth() {
   };
 
   return (
+    
     <div className="auth-page">
       <div className="auth-card">
         {/* <div className="auth-logo">⬢</div> */}
