@@ -6,18 +6,35 @@ import { Link } from "react-router-dom";
 export default function Bookmarks() {
     const [bookmarks, setBookmarks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loadingDelete, setloadingDelete] = useState(false);
 
     const loggedEmail = localStorage.getItem("user")
 
     useEffect(() => {
-        fetch(`http://localhost:3000/bookmarks/${loggedEmail}`)
+        fetch(`https://news-feed-b.vercel.app/bookmarks/${loggedEmail}`)
             .then(res => res.json())
             .then(data => {
                 setBookmarks(data)
                 setLoading(false);
             })
-
     })
+
+    // Handle delete bookmark
+    const deleteBookMark = async (id) => {
+        setloadingDelete(true)
+        await fetch(`https://news-feed-b.vercel.app/deletepreference`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, loggedEmail })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status = 200) {
+                    setloadingDelete(false)
+                }
+            })
+    }
+
 
     return (
         <div className="bookmark-page">
@@ -54,9 +71,11 @@ export default function Bookmarks() {
 
                             <button
                                 className="remove-btn"
-                                onClick={() => onRemove(item.id)}
+                                onClick={async () => {
+                                    await deleteBookMark(item.id);
+                                }}
                             >
-                                Remove Bookmark
+                                {loadingDelete? "Deleting bookmark":"Remove Bookmark"} 
                             </button>
                         </div>
                     ))}

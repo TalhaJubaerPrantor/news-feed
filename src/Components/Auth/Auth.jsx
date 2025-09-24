@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import "./Auth.css";
 import { Link, useNavigate } from 'react-router-dom';
+import { signInWithPopup, GoogleAuthProvider, getAuth } from 'firebase/auth'
+import { app } from "../Firebase/Firebase";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -8,14 +13,40 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
-  const [authLoading,setAuthLoading]=useState(false)
+  const [authLoading, setAuthLoading] = useState(false)
 
+  const auth = getAuth(app)
+  const googleProvider = new GoogleAuthProvider()
+  const handleGoogleLogin = async () => {
+    try {
+      const user = await signInWithPopup(auth, googleProvider);
+      if (user) {
+        // _tokenResponse.email
+        fetch(`https://news-feed-b.vercel.app/googledetails`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: isLoginForm ? JSON.stringify({ name: user._tokenResponse.fullName, email: user._tokenResponse.email, password: "" }) : JSON.stringify({ name, email, password })
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.status == 200) {
+              localStorage.setItem("user", data.user.email);
+              navigate("/dashboard"); // Redirect after login
+            }
+          })
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+
+  // Email and password login
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // console.log({ name, email, password, isLoginForm });
     setAuthLoading(true)
-    fetch(`http://localhost:3000/${isLoginForm ? 'login' : 'register'}`, {
+    fetch(`https://news-feed-b.vercel.app/${isLoginForm ? 'login' : 'register'}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: isLoginForm ? JSON.stringify({ email, password }) : JSON.stringify({ name, email, password })
@@ -80,13 +111,20 @@ export default function Auth() {
           </div>
           {/* <br /> */}
           <button type="submit" className="submit-btn">
-            {isLoginForm ? 
-            authLoading?"Loading":"Sign In"
-            : 
-            authLoading?"Loading":"Create Account"}
+            {isLoginForm ?
+              authLoading ? "Loading" : "Sign In"
+              :
+              authLoading ? "Loading" : "Create Account"}
           </button>
           {/* <br /> <br /> */}
         </form>
+        <p style={{ textAlign: "center" }}>Or</p>
+        {/* <button onClick={() => handleGoogleLogin()}>Google SignIn</button> */}
+
+        <button className="google-btn" onClick={() => handleGoogleLogin()}>
+          <FontAwesomeIcon icon={faGoogle} />
+          <span className="google-text">Sign in with Google</span>
+        </button>
 
         <p className="terms">
           By signing up, you agree to our{" "}

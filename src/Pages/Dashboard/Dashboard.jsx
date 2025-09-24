@@ -73,12 +73,12 @@ export default function Dashboard() {
   // updateTheme
 
   useEffect(() => {
-    fetch(`http://localhost:3000/getuser/${loggedEmail}`)
+    fetch(`https://news-feed-b.vercel.app/getuser/${loggedEmail}`)
       .then(res => res.json())
       .then(data => {
         // console.log(data.user.scrollIntensity)
         if (data.status == 200) {
-          // console.log(data)
+          console.log(data.user.scrollIntensity)
           setScrollIntensity(data.user.scrollIntensity)
           setSelectedColor(data.user.theme)
           setSelectedFont(data.user.font)
@@ -90,7 +90,7 @@ export default function Dashboard() {
   const [loadingUpdate, setLoadingUpdate] = useState(false)
   const updateTheme = () => {
     setLoadingUpdate(true);
-    fetch('http://localhost:3000/update', {
+    fetch('https://news-feed-b.vercel.app/update', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -111,13 +111,13 @@ export default function Dashboard() {
 
   // Preferance handlers
   useEffect(() => {
-    fetch(`http://localhost:3000/prefernce/${loggedEmail}`)
+    fetch(`https://news-feed-b.vercel.app/prefernce/${loggedEmail}`)
     .then(res=>res.json())
     .then(data=>setPreferences(data))
   }, [deletePref])
 
   const addPreference = (prop) => {
-    fetch("http://localhost:3000/addprefernce", {
+    fetch("https://news-feed-b.vercel.app/addprefernce", {
       method: "PUT",
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ newPref, loggedEmail })
@@ -130,7 +130,7 @@ export default function Dashboard() {
   const deletePreference =async(deletePref)=>{
     // console.log(e)
     // console.log(deletePref)
-     await fetch(`http://localhost:3000/deletepreference`, {
+     await fetch(`https://news-feed-b.vercel.app/deletepreference`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({deletePref,loggedEmail})
@@ -149,7 +149,7 @@ export default function Dashboard() {
   const [bookmarks, setBookmarks] = useState();
   function handleBookmark(newsId) {
 
-    fetch(`http://localhost:3000/reqbookmark`, {
+    fetch(`https://news-feed-b.vercel.app/reqbookmark`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newsId)
@@ -208,7 +208,6 @@ export default function Dashboard() {
                   {pref}
                   
                   <button onClick={async()=>{
-                    // await setDeletePref(pref);
                     await deletePreference(pref);
                   }}>✖</button>
                 </li>
@@ -220,7 +219,7 @@ export default function Dashboard() {
             <label>Scroll Intensity</label>
             <input onChange={(e) => {
               setScrollIntensity(e.target.value * 1000)
-            }} type="range" min="1" max="10" defaultValue="3" />
+            }} type="range" min="1" max="10" value={scrollIntensity/1000+""} />
             <br /><br />
             <p>Choose Theme:</p>
             <div className="theme-options">
@@ -241,15 +240,15 @@ export default function Dashboard() {
               <h3 className="font-title">Choose a Font</h3>
               <div className="font-options">
                 <label className="font-card">
-                  <input onChange={(e) => { setSelectedFont("sans-serif") }} type="radio" defaultChecked name="font" value="sans-serif" />
+                  <input onChange={(e) => { setSelectedFont("sans-serif") }} type="radio"  checked={selectedFont=="sans-serif"? true:false} name="font" value="sans-serif" />
                   <span className="font-name" style={{ fontFamily: 'Segoe UI' }}>Arial</span>
                 </label>
                 <label className="font-card">
-                  <input onChange={(e) => { setSelectedFont("cursive") }} type="radio" name="font" value="serif" />
+                  <input onChange={(e) => { setSelectedFont("cursive") }} checked={selectedFont=="cursive"? true:false} type="radio" name="font" value="cursive" />
                   <span className="font-name" style={{ fontFamily: 'Cursive' }}>Cursive</span>
                 </label>
                 <label className="font-card">
-                  <input onChange={(e) => { setSelectedFont("monospace") }} type="radio" name="font" value="monospace" />
+                  <input onChange={(e) => { setSelectedFont("monospace") }} checked={selectedFont=="monospace"? true:false} type="radio" name="font" value="monospace" />
                   <span className="font-name" style={{ fontFamily: 'Monospace' }}>Monospace</span>
                 </label>
               </div>
