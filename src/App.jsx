@@ -8,14 +8,7 @@ import { useEffect } from 'react'
 
 function App() {
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const user = localStorage.getItem("user"); // or "authToken", etc.
-    if (user) {
-      navigate("/dashboard", { replace: true }); // skip login page
-    }
-  }, [navigate]);
+  
 
   return (
     <>
