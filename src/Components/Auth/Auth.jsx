@@ -13,13 +13,14 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoginForm, setIsLoginForm] = useState(true);
-  const [authLoading, setAuthLoading] = useState(false)
-  
+  const [authLoading, setAuthLoading] = useState(false);
+  const [popUpLoading,setPopUpLoading]=useState(false);
 
   const auth = getAuth(app)
   const googleProvider = new GoogleAuthProvider()
   const handleGoogleLogin = async () => {
     try {
+      setPopUpLoading(true)
       const user = await signInWithPopup(auth, googleProvider);
       if (user) {
         // _tokenResponse.email
@@ -32,6 +33,7 @@ export default function Auth() {
           .then(data => {
             if (data.status == 200) {
               localStorage.setItem("user", data.user.email);
+      setPopUpLoading(false)
               navigate("/dashboard"); // Redirect after login
             }
           })
@@ -125,7 +127,7 @@ export default function Auth() {
 
         <button className="google-btn" onClick={() => handleGoogleLogin()}>
           <FontAwesomeIcon icon={faGoogle} />
-          <span className="google-text">Sign in with Google</span>
+          <span className="google-text">{popUpLoading?"Loading":"Continue with Google"}</span>
         </button>
 
         <p className="terms">
